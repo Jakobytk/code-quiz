@@ -1,11 +1,117 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <link rel="stylesheet" href="assets/style.css">
+    <title>Multiple Choice Quiz</title>
 </head>
 <body>
-    
+    <button id="startButton">Start</button>
+    <div class="question" id="question1">
+        <h2>JavaScript is a ___ -side programming language.</h2>
+        <input type="radio" name="q1" value="A"> A) client<br>
+        <input type="radio" name="q1" value="B"> B) both<br>
+        <input type="radio" name="q1" value="C"> C) server<br>
+        <input type="radio" name="q1" value="D"> D) none<br>
+        <button class="next">Next</button>
+    </div>
+    <div class="question" id="question2">
+        <h2>Which of the following will write the message “Hello DataFlair!” in an alert box?</h2>
+        <input type="radio" name="q2" value="A"> A) alertBox(“Hello DataFlair!”);<br>
+        <input type="radio" name="q2" value="B"> B) alert(“Hello DataFlair!”);<br>
+        <input type="radio" name="q2" value="C"> C) alert(Hello DataFlair!);<br>
+        <input type="radio" name="q2" value="D"> D) msgAlert(“Hello DataFlair!”);<br>
+        <button class="next">Next</button>
+    </div>
+    <div class="question" id="question3">
+        <h2>How do you find the minimum of x and y using JavaScript?</h2>
+        <input type="radio" name="q3" value="A"> A) min(x,y);<br>
+        <input type="radio" name="q3" value="B"> B) Math.min(x,y)<br>
+        <input type="radio" name="q3" value="C"> C) Math.min(xy)<br>
+        <input type="radio" name="q3" value="D"> D) min(xy);<br>
+        <button class="next">Next</button>
+    </div>
+    <div class="question" id="question4">
+        <h2>If the value of x is 40, then what is the output of the following program?
+            (x % 10 == 0)? console.log(“Divisible by 10”) : console.log(“Not divisible by 10”);</h2>
+        <input type="radio" name="q4" value="A"> A) ReferenceError<br>
+        <input type="radio" name="q4" value="B"> B) Divisible by 10<br>
+        <input type="radio" name="q4" value="C"> C) Not divisible by 10<br>
+        <input type="radio" name="q4" value="D"> D) None of the above<br>
+        <button class="next">Next</button>
+    </div>
+    <div id="timer">Time Left: <span id="timeLeft">30</span> seconds</div>
+    <div id="result">
+        <h2>Results:</h2>
+        <p>Correct: <span id="correctCount">0</span></p>
+        <p>Incorrect: <span id="incorrectCount">0</span></p>
+        <p>Time Left: <span id="finalTimeLeft">30</span> seconds</p>
+    </div>
+
+    <script>
+        const questions = document.querySelectorAll('.question');
+        const nextButtons = document.querySelectorAll('.next');
+        const startButton = document.getElementById('startButton');
+        const result = document.getElementById('result');
+        const correctCount = document.getElementById('correctCount');
+        const incorrectCount = document.getElementById('incorrectCount');
+        const timer = document.getElementById('timer');
+        const timeLeft = document.getElementById('timeLeft');
+        const finalTimeLeft = document.getElementById('finalTimeLeft');
+        
+        let currentQuestion = 0;
+        let correctAnswers = 0;
+        let incorrectAnswers = 0;
+        let secondsLeft = 30;
+        let timerInterval;
+
+        function showNextQuestion() {
+            questions[currentQuestion].style.display = 'none';
+            currentQuestion++;
+            
+            if (currentQuestion < questions.length) {
+                questions[currentQuestion].style.display = 'block';
+            } else {
+                clearInterval(timerInterval);
+                result.style.display = 'block';
+                correctCount.textContent = correctAnswers;
+                incorrectCount.textContent = incorrectAnswers;
+                finalTimeLeft.textContent = secondsLeft;
+            }
+        }
+
+        function startTimer() {
+            timerInterval = setInterval(function() {
+                secondsLeft--;
+                timeLeft.textContent = secondsLeft;
+                if (secondsLeft === 0) {
+                    clearInterval(timerInterval);
+                    showNextQuestion();
+                }
+            }, 1000);
+        }
+
+        startButton.addEventListener('click', () => {
+            startButton.style.display = 'none';
+            questions[0].style.display = 'block';
+            startTimer();
+        });
+
+        nextButtons.forEach((button, index) => {
+            button.addEventListener('click', () => {
+                const selectedAnswer = questions[index].querySelector('input:checked');
+                if (selectedAnswer) {
+                    if (selectedAnswer.value === 'B') {
+                        correctAnswers++;
+                    } else {
+                        incorrectAnswers++;
+                    }
+                }
+                showNextQuestion();
+                if (currentQuestion === 1) {
+                    startTimer();
+                }
+            });
+        });
+    </script>
 </body>
 </html>
